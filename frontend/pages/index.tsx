@@ -1,7 +1,7 @@
 // Home.tsx
 /* eslint-disable prettier/prettier */
 import { GetServerSideProps } from 'next';
-import { getTopOffers } from '../services/api';
+import { getTopOffers } from '@/services/api';
 import ProductList from '../components/ProductList';
 import Navbar from '../components/Navbar';
 import styles from '../styles/Home.module.css';

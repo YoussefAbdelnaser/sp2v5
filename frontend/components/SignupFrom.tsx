@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { signup, setAuthToken } from '@/services/api';
+import { signup, setAuthToken, resendVerification } from '@/services/api';
 import { VerifyEmail } from '@/components/VerifyEmail';
+import axios from 'axios';
 
 export default function SignupPage() {
   const [firstName, setFirstName] = useState('');
@@ -44,6 +45,17 @@ export default function SignupPage() {
     }
   };
 
+  const resendVerificationEmail = async (email: string) => {
+    const response = await axios.post(
+      'http://localhost:3000/authentication/resend-verification',
+      {
+        email,
+      },
+    );
+    if (response.data.message === 'Verification email sent') {
+      alert('Verification email has been resent. Please check your inbox.');
+    }
+  };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <div className="max-w-md w-full space-y-8">
@@ -172,6 +184,12 @@ export default function SignupPage() {
             </button>
           </div>
         </form>
+        <button
+          onClick={() => resendVerificationEmail(email)}
+          className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Resend Verification Email
+        </button>
         <VerifyEmail />
       </div>
       <a className="m-6" href="http://localhost:4000/login">

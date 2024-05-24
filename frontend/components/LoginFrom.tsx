@@ -3,12 +3,13 @@ import React, { useState } from 'react';
 import { getAuthToken, login, setAuthToken } from '@/services/api';
 import { useRouter } from 'next/navigation';
 import ForgotPassword from '@/components/ForgotPassword';
+import axios from 'axios';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-  const token = getAuthToken();
+  // const token = getAuthToken();
   const handleEmailChange = (event: any) => {
     setEmail(event.target.value);
   };
@@ -82,6 +83,12 @@ const LoginForm = () => {
               Login
             </button>
           </div>
+          <a
+            href="http://localhost:4000/signup"
+            className="text-xl  text-indigo-600 hover:text-indigo-900"
+          >
+            Go register page if you do not have an account
+          </a>
         </form>
         <ForgotPassword />
       </div>

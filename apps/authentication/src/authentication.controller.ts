@@ -13,6 +13,7 @@ import { SignUpDto } from '../dto/signup.dto';
 import { LoginDto } from '../dto/login.dto';
 import { AuthenticationGuard } from './authentication.guard';
 import { User } from '../schemas/user.schema';
+import { ResendVerificationDto } from '../dto/ResendVerification.dto';
 
 @Controller('authentication')
 export class AuthenticationController {
@@ -99,5 +100,14 @@ export class AuthenticationController {
       console.log('error', error);
       return 'Password not reset';
     }
+  }
+
+  @Post('/resend-verification')
+  async resendVerificationEmail(
+    @Body() resendVerificationDto: ResendVerificationDto,
+  ): Promise<any> {
+    return await this.authenticationService.resendVerificationEmail(
+      resendVerificationDto.email,
+    );
   }
 }

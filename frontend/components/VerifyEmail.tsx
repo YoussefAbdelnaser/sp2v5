@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { getAuthToken, verifyEmail } from "@/services/api";
+import React, { useState } from 'react';
+import { getAuthToken, verifyEmail } from '@/services/api';
 
 export const VerifyEmail = () => {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const token = getAuthToken();
 
   const verifyEmailWithToken = async () => {
@@ -11,10 +11,10 @@ export const VerifyEmail = () => {
         const response = await verifyEmail(token);
         setMessage(response.message);
       } else {
-        setMessage("Please register first.");
+        setMessage('Please register first.');
       }
     } catch (error) {
-      setMessage("An error occurred while verifying the email.");
+      setMessage('An error occurred while verifying the email.');
     }
   };
 

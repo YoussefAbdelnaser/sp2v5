@@ -51,11 +51,18 @@ export const getProductById = async (id: string) => {
 };
 
 export const getProductsByCategory = async (category: string) => {
-  const response = await homeapi.post('/home/products-categories', { category });
+  const response = await homeapi.post('/home/products-categories', {
+    category,
+  });
   return response.data;
 };
 
-export const addReview = async (productId: string, rating: number, comment: string, token: string) => {
+export const addReview = async (
+  productId: string,
+  rating: number,
+  comment: string,
+  token: string,
+) => {
   if (!token) {
     throw new Error('Token not found');
   }
@@ -65,11 +72,18 @@ export const addReview = async (productId: string, rating: number, comment: stri
     Authorization: `Bearer ${token}`,
   };
 
-  const response = await Productsapi.post('/products/reviews', { id: productId, rating, comment }, { headers });
+  const response = await Productsapi.post(
+    '/products/reviews',
+    { id: productId, rating, comment },
+    { headers },
+  );
   return response.data;
 };
 
-export const addToCart = async (item: { productId: string; quantity: number; purchaseOption: string }, token: string) => {
+export const addToCart = async (
+  item: { productId: string; quantity: number; purchaseOption: string },
+  token: string,
+) => {
   if (!token) {
     throw new Error('Token not found');
   }
@@ -84,76 +98,97 @@ export const addToCart = async (item: { productId: string; quantity: number; pur
 };
 
 export const getCartItems = async (token: string) => {
-    if (!token) {
-      throw new Error('Token not found');
-    }
+  if (!token) {
+    throw new Error('Token not found');
+  }
 
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    };
-
-    const response = await Cartapi.get('/cart', { headers });
-    return response.data;
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
   };
 
-  export const placeOrder = async (cartItems: {
-    _id: string; productId: string; product?: {
-        _id: string; name: string; //localhost:3001',
-        //localhost:3001',
-        price: number;
-    } | undefined; quantity: number; purchaseOption?: "rent" | undefined; startDate?: Date | undefined; endDate?: Date | undefined; customization?: Record<string, unknown> | undefined;
-}[], token: string) => {
-    if (!token) {
-        throw new Error('Token not found');
-    }
+  const response = await Cartapi.get('/cart', { headers });
+  return response.data;
+};
 
-    const headers = {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-    };
+export const placeOrder = async (
+  cartItems: {
+    _id: string;
+    productId: string;
+    product?:
+      | {
+          _id: string;
+          name: string; //localhost:3001',
+          //localhost:3001',
+          price: number;
+        }
+      | undefined;
+    quantity: number;
+    purchaseOption?: 'rent' | undefined;
+    startDate?: Date | undefined;
+    endDate?: Date | undefined;
+    customization?: Record<string, unknown> | undefined;
+  }[],
+  token: string,
+) => {
+  if (!token) {
+    throw new Error('Token not found');
+  }
 
-    // Corrected URL to match the backend route definition
-    const response = await Cartapi.post('/cart/place-order', {}, { headers });
-    return response.data;
-}
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+  };
+
+  // Corrected URL to match the backend route definition
+  const response = await Cartapi.post('/cart/place-order', {}, { headers });
+  return response.data;
+};
 
 // Assuming your getOrders function looks like this
 export const getOrders = async (token: string) => {
-    if (!token) {
-      throw new Error('Token not found');
-    }
+  if (!token) {
+    throw new Error('Token not found');
+  }
 
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    };
-
-    const response = await Cartapi.get('/cart/orders', { headers });
-    return response.data; // Assuming this directly returns an array of orders
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
   };
 
-  export const deleteCartItem = async (productId: string, token: string) => {
-    if (!token) {
-      throw new Error('Token not found');
-    }
+  const response = await Cartapi.get('/cart/orders', { headers });
+  return response.data; // Assuming this directly returns an array of orders
+};
 
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    };
+export const deleteCartItem = async (productId: string, token: string) => {
+  if (!token) {
+    throw new Error('Token not found');
+  }
 
-    const response = await Cartapi.delete(`/cart/delete-item/${productId}`, { headers }); // Corrected URL with productId
-    return response.data;
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
   };
 
+  const response = await Cartapi.delete(`/cart/delete-item/${productId}`, {
+    headers,
+  }); // Corrected URL with productId
+  return response.data;
+};
 
-  ////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
 
-const BASE_URL = "http://localhost:3000/authentication"; // Replace with your backend URL
+const BASE_URL = 'http://localhost:3000/authentication'; // Replace with your backend URL
 
 export const signup = async (data: any) => {
   const response = await axios.post(`${BASE_URL}/signup`, data);
+  return response.data;
+};
+
+export const resendVerification = async (email: any) => {
+  const response = await axios.post(`${BASE_URL}/resend-verification`, {
+    email,
+  });
   return response.data;
 };
 
@@ -178,17 +213,15 @@ export const resetPassword = async (data: any) => {
 };
 
 export const setAuthToken = (token: any) => {
-  localStorage.setItem("authToken", token);
+  localStorage.setItem('authToken', token);
 };
 
 export const getAuthToken = () => {
-  if (typeof window !== "undefined") {
-    return localStorage.getItem("authToken");
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('authToken');
   }
   return null;
 };
-export const isAuthenticated = () => {
-  return !!getAuthToken(); // Check if token exists
-};
-
-
+// export const isAuthenticated = () => {
+//   return !!getAuthToken(); // Check if token exists
+// };

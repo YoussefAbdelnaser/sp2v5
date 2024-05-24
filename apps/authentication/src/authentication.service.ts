@@ -200,4 +200,51 @@ export class AuthenticationService {
       return { message: 'Password reset successfully' };
     }
   }
+
+  async resendVerificationEmail(email: string): Promise<any> {
+    const user = await this.userModel.findOne({ email });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    if (user.isVerified) {
+      return { message: 'User is already verified' };
+    }
+
+    // Generate a new verification token
+    const token = this.jwtService.sign(
+      { userId: user._id },
+      { expiresIn: '1d' },
+    );
+
+    // Save the new token to the user document
+    user.Token = token;
+    await user.save();
+
+    // Send the verification email
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      secure: true,
+      port: 465,
+      auth: {
+        user: 'abdulsamea2003@gmail.com',
+        pass: 'zmtt vxgh onij luey',
+      },
+    });
+
+    const mailOptions = {
+      from: 'abdulsamea2003@gmail.com',
+      to: email,
+      subject: 'Email Verification',
+      text: `text: \`You are receiving this because you (or someone else) have requested the verification of the email for your account.\\n\\n
+               Please click on the following link, or paste this into your browser to complete the process:\\n\\n
+                http://localhost:4000/login 
+                If you did not request this, please ignore this email and your account will remain inactive.\\n\``,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return { message: 'Verification email sent' };
+  }
 }

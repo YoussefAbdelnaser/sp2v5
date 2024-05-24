@@ -29,4 +29,3 @@ export class SignUpDto {
 
   readonly token: string;
 }
-
